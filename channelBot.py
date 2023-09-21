@@ -18,6 +18,58 @@ except FileNotFoundError:
 
 # Mock tx info
 # api_url = "http://si8a1.asuscomm.com:8000/mock/"
+# res = requests.get(api_url)
+
+# if res.status_code == 200:
+#     transaction_data = res.json()
+#     notifications = []
+
+#     for transaction in transaction_data:
+#         tx_id = transaction["tx_id"]
+#         sender_address = transaction["sender_address"]
+#         receiver_address = transaction["receiver_address"]
+#         transaction_type = transaction["type"]
+#         amount = transaction["amount"]
+#         confirm_time = datetime.utcfromtimestamp(transaction["confirm_time"]).strftime('%Y-%m-%d %H:%M:%S')
+        
+#         if tx_id not in sent_transactions:
+#             notification = f"""
+#             🚨 *LARGE TRANSACTION ALERT* 🚨
+
+# *Sender's Address*: {sender_address}
+# *Recipient's Address*: {receiver_address}
+# *Transaction Amount*: {amount} TON
+# *Transaction Time*: {confirm_time} UTC
+
+# ⚠️ Please take note of this transaction for security and transparency ⚠️
+#             """
+#             notifications.append(notification)
+    
+#     for notification in notifications:
+#         message = {
+#                 'chat_id': chat_id,
+#                 'text': notification,
+#                 'parse_mode': 'Markdown'
+#             }    
+            
+#         # Send the message to the Telegram channel
+#         url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
+#         response = requests.post(url, json=message)
+                
+#         if response.status_code == 200:
+#                 print('Message successfully sent to the Telegram channel!')
+#         else:
+#                 print('Message sending failed. Status code:', response.status_code)
+#                 print('Error message:', response.text)
+
+# elif res.status_code == 429:
+#         retry_after = int(res.headers.get('Retry-After', 60))
+#         print(f"Rate limited. Waiting for {retry_after} seconds before retrying...")
+#         time.sleep(retry_after)
+
+# else:
+#     print('API request failed. Status code:', res.status_code)
+
 
 # Real-Time tx info
 while True:
@@ -67,6 +119,12 @@ while True:
             else:
                     print('Message sending failed. Status code:', response.status_code)
                     print('Error message:', response.text)
+
+    elif res.status_code == 429:
+        retry_after = int(res.headers.get('Retry-After', 60))
+        print(f"Rate limited. Waiting for {retry_after} seconds before retrying...")
+        time.sleep(retry_after)
+
     else:
         print('API request failed. Status code:', res.status_code)
 
